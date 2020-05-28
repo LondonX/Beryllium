@@ -39,4 +39,5 @@ dependencies {
     implementation 'com.yanzhenjie.andserver:api:2.1.1'
     kapt 'com.yanzhenjie.andserver:processor:2.1.1'
     implementation project(path: ':kutil3')
+    kapt "androidx.room:room-compiler:2.2.5"
 }

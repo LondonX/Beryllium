@@ -2,11 +2,13 @@ package com.londonx.be.tv
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.github.salomonbrys.kotson.fromJson
+import com.londonx.be.tv.entity.TVStation
+import com.londonx.be.tv.util.db
+import com.londonx.kutil.gson
 import com.yanzhenjie.andserver.AndServer
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import splitties.systemservices.wifiManager
 import splitties.views.textResource
 import java.util.concurrent.TimeUnit
@@ -40,6 +42,18 @@ class MainActivity : AppCompatActivity() {
                 val ip4String = intToIP(ip)
                 tvInfo.text = getString(R.string.fmt_server_running_at_, ip4String, SERVER_PORT)
                 delay(5000)
+            }
+        }
+        MainScope().launch {
+            val currentStations = db.tvStationDao().getAll()
+            if (currentStations.isEmpty()) {
+                val defaultStations = withContext(Dispatchers.IO) {
+                    val defaultStationsJson = String(
+                        assets.open("default_tv_stations.json").readBytes()
+                    )
+                    gson.fromJson<Array<TVStation>>(defaultStationsJson)
+                }
+                db.tvStationDao().insert(*defaultStations)
             }
         }
     }
