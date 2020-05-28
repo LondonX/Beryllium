@@ -23,7 +23,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -40,4 +42,5 @@ dependencies {
     kapt 'com.yanzhenjie.andserver:processor:2.1.1'
     implementation project(path: ':kutil3')
     kapt "androidx.room:room-compiler:2.2.5"
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.4'
 }

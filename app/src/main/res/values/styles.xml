@@ -6,6 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 
 </resources>
