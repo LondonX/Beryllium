@@ -3,6 +3,7 @@ package com.londonx.be.tv
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.github.salomonbrys.kotson.fromJson
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -15,12 +16,12 @@ import com.londonx.kutil.gson
 import com.yanzhenjie.andserver.AndServer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import net.glxn.qrgen.android.QRCode
 import splitties.systemservices.wifiManager
 import splitties.toast.longToast
-import splitties.toast.toast
+import splitties.views.imageBitmap
 import splitties.views.textResource
 import java.util.concurrent.TimeUnit
-
 
 private const val SERVER_PORT = 8899
 
@@ -46,6 +47,15 @@ class MainActivity : AppCompatActivity() {
             field = value
             notifyTvStationChange()
         }
+    private var configPageUrl = ""
+        set(value) {
+            if (field == value) {
+                return
+            }
+            field = value
+            tvInfo.text = getString(R.string.fmt_cfg_page_, field)
+            imgQr.imageBitmap = QRCode.from(field).bitmap()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,9 +76,8 @@ class MainActivity : AppCompatActivity() {
                     continue
                 }
                 val ip4String = intToIP(ip)
-                val webPage = "http://$ip4String:$SERVER_PORT/index.html"
+                configPageUrl = "http://$ip4String:$SERVER_PORT/index.html"
                 //QR code
-                tvInfo.text = getString(R.string.fmt_cfg_page_, webPage)
                 delay(5000)
             }
         }
@@ -88,18 +97,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (BuildConfig.DEBUG){
-            toast("keyCode: $keyCode")
-        }
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> changeStation(false)
             KeyEvent.KEYCODE_DPAD_DOWN -> changeStation(true)
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
-            }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-            }
-            KeyEvent.KEYCODE_DPAD_CENTER -> {
-            }
+            else -> viewInfo.visibility =
+                if (viewInfo.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
         }
         return super.onKeyDown(keyCode, event)
     }
@@ -117,8 +119,10 @@ class MainActivity : AppCompatActivity() {
                 (ip shr 24 and 0xFF)
     }
 
+    private var changingJob: Job? = null
     private fun changeStation(nextOrPrevious: Boolean) {
-        MainScope().launch {
+        changingJob?.cancel()
+        changingJob = MainScope().launch {
             val savedStations = db.tvStationDao().getAll()
             val index = savedStations.indexOfFirst {
                 it.id == currentStation?.id
@@ -129,6 +133,16 @@ class MainActivity : AppCompatActivity() {
                 else -> index
             }
             currentStation = savedStations.getOrNull(targetIndex)
+
+            channelIndex.text = getString(
+                R.string.fmt_channel_index,
+                if (targetIndex < 0) "--" else (targetIndex + 1).toString(),
+                savedStations.size.toString()
+            )
+            channelTitle.text = currentStation?.title ?: "--"
+            channelInfo.visibility = View.VISIBLE
+            delay(2000)
+            channelInfo.visibility = View.INVISIBLE
         }
     }
 

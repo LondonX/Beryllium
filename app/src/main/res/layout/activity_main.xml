@@ -12,12 +12,61 @@
         android:layout_height="match_parent"
         app:use_controller="false" />
 
-    <TextView
-        android:id="@+id/tvInfo"
+    <LinearLayout
+        android:id="@+id/channelInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="16dp"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/channelIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="@string/app_name"
+            android:textSize="44sp" />
+
+        <TextView
+            android:id="@+id/channelTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="@string/app_name"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/viewInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="@string/starting_config_server"
-        android:textSize="12sp" />
+        android:gravity="start"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="invisible"
+        tools:ignore="UseCompoundDrawables">
 
+        <TextView
+            android:id="@+id/tvInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/starting_config_server" />
+
+        <ImageView
+            android:id="@+id/imgQr"
+            android:layout_width="144dp"
+            android:layout_height="144dp"
+            android:layout_marginTop="16dp"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
 </FrameLayout>

@@ -3,4 +3,5 @@
     <string name="fmt_cfg_page_">Config web page: %1$s</string>
     <string name="starting_config_server">Starting config server…</string>
     <string name="no_saved_stations">No saved stations</string>
+    <string name="fmt_channel_index" translatable="false">%1$s/%2$s</string>
 </resources>
