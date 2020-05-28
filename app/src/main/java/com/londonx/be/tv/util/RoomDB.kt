@@ -31,13 +31,18 @@ interface TVStationDao {
     @Insert
     suspend fun insert(vararg tvStations: TVStation)
 
-    @Delete
-    suspend fun remove(vararg tvStations: TVStation)
-
-    @Update
-    suspend fun update(vararg tvStations: TVStation)
-
     @Query("SELECT * FROM TVStation ORDER BY sort ASC")
     suspend fun getAll(): List<TVStation>
 
+    @Insert
+    fun insertSync(vararg tvStations: TVStation)
+
+    @Delete
+    fun deleteSync(vararg tvStations: TVStation)
+
+    @Update
+    fun updateSync(vararg tvStations: TVStation)
+
+    @Query("SELECT * FROM TVStation ORDER BY sort ASC")
+    fun getAllSync(): List<TVStation>
 }

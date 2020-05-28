@@ -8,13 +8,13 @@
   {
     "title": "浙江卫视FHD",
     "m3u8": "http://117.148.187.37/PLTV/88888888/224/3221226136/index.m3u8",
-    "sort": 0,
+    "sort": 1,
     "id": 0
   },
   {
     "title": "CCTV-1 HD",
     "m3u8": "http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8",
-    "sort": 0,
+    "sort": 2,
     "id": 0
   }
 ]
