@@ -8,7 +8,7 @@ import com.yanzhenjie.andserver.annotation.*
 @RestController
 class TVStationController {
 
-    @PostMapping("/tvStation/insert")
+    @PostMapping("/tvStation")
     fun insertSync(
         @RequestParam("title") title: String,
         @RequestParam("m3u8") m3u8: String
@@ -17,13 +17,13 @@ class TVStationController {
         db.tvStationDao().insertSync(TVStation(title, m3u8, maxSort + 1))
     }
 
-    @DeleteMapping("/tvStation/delete")
+    @DeleteMapping("/tvStation")
     fun deleteSync(@RequestParam("tvStationId") tvStationId: Long) {
         val tvStation = db.tvStationDao().getAllSync().find { it.id == tvStationId } ?: return
         db.tvStationDao().deleteSync(tvStation)
     }
 
-    @PutMapping("/tvStation/update")
+    @PutMapping("/tvStation")
     fun updateSync(
         @RequestParam("tvStationId") tvStationId: Long,
         @RequestParam("title") title: String,
@@ -33,7 +33,7 @@ class TVStationController {
         db.tvStationDao().updateSync(TVStation(title, m3u8, sort, tvStationId))
     }
 
-    @GetMapping("/tvStation/getAll")
+    @GetMapping("/tvStation")
     fun getAll(): String {
         return gson.toJson(db.tvStationDao().getAllSync())
     }
