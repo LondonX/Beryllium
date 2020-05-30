@@ -106,6 +106,18 @@ class MainActivity : AppCompatActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
+    override fun onPause() {
+        super.onPause()
+        player.stop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (this.currentStation != null) {
+            notifyTvStationChange()
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         andServer.shutdown()
