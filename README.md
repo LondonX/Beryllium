@@ -1,3 +1,6 @@
+# TV Station Management
+* http://[yourAndroidTVIp]:8899/index.html
+
 # TV Station Management API
 * http://`your Android TV IP`:8899/tvStation
 * Supported methods GET POST PUT DELETE
@@ -13,4 +16,4 @@
 | DELETE | delete TV stations | tvStationId: Int |
 
 # m3u8 repositories
-* [https://github.com/iptv-org/iptv]()
+* [https://github.com/iptv-org/iptv](https://github.com/iptv-org/iptv)

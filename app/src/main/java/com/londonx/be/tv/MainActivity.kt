@@ -3,6 +3,7 @@ package com.londonx.be.tv
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.github.salomonbrys.kotson.fromJson
@@ -100,10 +101,17 @@ class MainActivity : AppCompatActivity() {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> changeStation(false)
             KeyEvent.KEYCODE_DPAD_DOWN -> changeStation(true)
-            else -> viewInfo.visibility =
+            KeyEvent.KEYCODE_DPAD_CENTER -> viewInfo.visibility =
                 if (viewInfo.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
+            changeStation(true)
+        }
+        return super.onTouchEvent(event)
     }
 
     override fun onPause() {
