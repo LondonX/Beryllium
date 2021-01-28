@@ -1,5 +1,5 @@
 # TV Station Management
-* http://[yourAndroidTVIp]:8899/index.html
+* http://[yourAndroidTVIp]:8899/
 
 # TV Station Management API
 * http://`your Android TV IP`:8899/tvStation

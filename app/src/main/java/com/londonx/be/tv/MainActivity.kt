@@ -6,9 +6,16 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.github.salomonbrys.kotson.fromJson
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.londonx.be.tv.entity.TVStation
@@ -16,10 +23,15 @@ import com.londonx.be.tv.util.db
 import com.londonx.kutil.gson
 import com.yanzhenjie.andserver.AndServer
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import net.glxn.qrgen.android.QRCode
+import splitties.resources.str
 import splitties.systemservices.wifiManager
 import splitties.toast.longToast
+import splitties.toast.toast
 import splitties.views.imageBitmap
 import splitties.views.textResource
 import java.util.concurrent.TimeUnit
@@ -33,11 +45,22 @@ class MainActivity : AppCompatActivity() {
             .timeout(10, TimeUnit.SECONDS)
             .build()
     }
-    private val player by lazy { SimpleExoPlayer.Builder(this).build() }
+    private val player by lazy {
+        SimpleExoPlayer.Builder(this).setLoadControl(asapLoadControl).build()
+    }
+    private val asapLoadControl by lazy {
+        DefaultLoadControl.Builder()
+            .setBufferDurationsMs(
+                1000,
+                60000,
+                1000,
+                1000,
+            ).build()
+    }
     private val dataSourceFactory by lazy {
         DefaultDataSourceFactory(
             this,
-            Util.getUserAgent(this, "Mozilla/4.0 (compatible; MSIE 6.0; ztebw V1.0)")
+            Util.getUserAgent(this, "Mozilla/4.0 (compatible; MSIE 6.0; ztebw V1.0)"),
         )
     }
     private var currentStation: TVStation? = null
@@ -65,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         playerView.player = player
 
         andServer.startup()
-        MainScope().launch {
+        lifecycleScope.launchWhenCreated {
             while (!isDestroyed) {
                 if (!andServer.isRunning) {
                     tvInfo.textResource = R.string.starting_config_server
@@ -82,13 +105,14 @@ class MainActivity : AppCompatActivity() {
                 delay(5000)
             }
         }
-        MainScope().launch {
+        lifecycleScope.launchWhenCreated {
+            if (BuildConfig.DEBUG) db.tvStationDao().clear()
             val savedStations = db.tvStationDao().getAll()
             if (savedStations.isEmpty()) {
                 val defaultStations = withContext(Dispatchers.IO) {
-                    val defaultStationsJson = String(
-                        assets.open("default_tv_stations.json").readBytes()
-                    )
+                    @Suppress("BlockingMethodInNonBlockingContext")
+                    val defaultStationsJson =
+                        String(assets.open("default_tv_stations.json").readBytes())
                     gson.fromJson<Array<TVStation>>(defaultStationsJson)
                 }
                 db.tvStationDao().insert(*defaultStations)
@@ -142,7 +166,7 @@ class MainActivity : AppCompatActivity() {
     private var changingJob: Job? = null
     private fun changeStation(nextOrPrevious: Boolean) {
         changingJob?.cancel()
-        changingJob = MainScope().launch {
+        changingJob = lifecycleScope.launchWhenCreated {
             val savedStations = db.tvStationDao().getAll()
             val index = savedStations.indexOfFirst {
                 it.id == currentStation?.id
@@ -172,10 +196,20 @@ class MainActivity : AppCompatActivity() {
             longToast(R.string.no_saved_stations)
             return
         }
-
-        val ms = HlsMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(Uri.parse(currentStation.m3u8))
-        player.prepare(ms, true, true)
+        val uri = Uri.parse(currentStation.m3u8)
+        val type = Util.inferContentType(uri)
+        val ms = when (type) {
+            C.TYPE_DASH -> DashMediaSource.Factory(dataSourceFactory)
+            C.TYPE_HLS -> HlsMediaSource.Factory(dataSourceFactory)
+            C.TYPE_SS -> SsMediaSource.Factory(dataSourceFactory)
+            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(dataSourceFactory)
+            else -> {
+                toast(str(R.string.fmt_unsupported_content_type, type.toString()))
+                return
+            }
+        }.createMediaSource(MediaItem.fromUri(uri))
+        player.setMediaSource(ms)
+        player.prepare()
         player.playWhenReady = true
     }
 }

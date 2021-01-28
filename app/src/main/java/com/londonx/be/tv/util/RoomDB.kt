@@ -45,4 +45,7 @@ interface TVStationDao {
 
     @Query("SELECT * FROM TVStation ORDER BY sort ASC")
     fun getAllSync(): List<TVStation>
+
+    @Query("DELETE FROM TVStation")
+    suspend fun clear()
 }

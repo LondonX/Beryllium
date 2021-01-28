@@ -10,6 +10,6 @@ class AppWebConfig : WebConfig {
     override fun onConfig(context: Context?, delegate: WebConfig.Delegate?) {
         context ?: return
         delegate ?: return
-        delegate.addWebsite(AssetsWebsite(context, "/build"))
+        delegate.addWebsite(AssetsWebsite(context, "/build", "index.html"))
     }
 }

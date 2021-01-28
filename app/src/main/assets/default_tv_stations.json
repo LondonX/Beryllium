@@ -1,19 +1,19 @@
 [
   {
     "title": "湖南卫视HD",
-    "m3u8": "http://39.134.52.182/wh7f454c46tw1696467131_1868720566/hwottcdn.ln.chinamobile.com/PLTV/88888890/224/3221225981/index.m3u8",
+    "m3u8": "rtmp://58.200.131.2:1935/livetv/hunanhd",
     "sort": 0,
     "id": 0
   },
   {
     "title": "浙江卫视FHD",
-    "m3u8": "http://117.148.187.37/PLTV/88888888/224/3221226136/index.m3u8",
+    "m3u8": "rtmp://58.200.131.2:1935/livetv/zjhd",
     "sort": 1,
     "id": 0
   },
   {
     "title": "CCTV-1 HD",
-    "m3u8": "http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8",
+    "m3u8": "http://live-temp-litchi-hls-yf.jstv.com/live/zhibo-cctv1gq/online.m3u8",
     "sort": 2,
     "id": 0
   }
