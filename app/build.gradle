@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.yanzhenjie.andserver'
 
 android {
     compileSdkVersion 29
@@ -53,8 +54,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.yanzhenjie.andserver:api:2.1.7'
-    kapt 'com.yanzhenjie.andserver:processor:2.1.7'
+    implementation "com.yanzhenjie.andserver:api:$andserver_version"
+    kapt "com.yanzhenjie.andserver:processor:$andserver_version"
     implementation project(path: ':kutil3')
     kapt "androidx.room:room-compiler:2.2.6"
     implementation 'com.google.android.exoplayer:exoplayer:2.12.3'
