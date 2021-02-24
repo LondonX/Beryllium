@@ -5,8 +5,8 @@ idea.module {
 }
 
 buildscript {
-    ext.kotlin_version = '1.4.21'
-    ext.andserver_version = '2.1.7'
+    ext.kotlin_version = '1.4.30'
+    ext.andserver_version = '2.1.8'
     repositories {
         google()
         jcenter()
