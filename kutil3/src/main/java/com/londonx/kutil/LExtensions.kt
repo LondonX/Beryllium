@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Editable
@@ -239,7 +240,19 @@ fun Bitmap.compressToFile(
     val extension = when (fmt) {
         Bitmap.CompressFormat.JPEG -> "jpg"
         Bitmap.CompressFormat.PNG -> "png"
-        Bitmap.CompressFormat.WEBP -> "webp"
+        else -> if (Build.VERSION.SDK_INT > 30) {
+            if (fmt == Bitmap.CompressFormat.WEBP_LOSSLESS || fmt == Bitmap.CompressFormat.WEBP_LOSSY) {
+                "webp"
+            } else {
+                fmt.toString()
+            }
+        } else {
+            if (fmt == Bitmap.CompressFormat.WEBP) {
+                "webp"
+            } else {
+                fmt.toString()
+            }
+        }
     }
     val bos = ByteArrayOutputStream()
     this.compress(fmt, 100, bos)
