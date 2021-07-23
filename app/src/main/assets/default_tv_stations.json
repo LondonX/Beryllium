@@ -13,7 +13,13 @@
   },
   {
     "title": "CCTV-1 HD",
-    "m3u8": "http://live-temp-litchi-hls-yf.jstv.com/live/zhibo-cctv1gq/online.m3u8",
+    "m3u8": "http://39.134.115.163:8080/PLTV/88888910/224/3221225618/index.m3u8",
+    "sort": 2,
+    "id": 0
+  },
+  {
+    "title": "爱上4K",
+    "m3u8": "http://39.134.24.24/PLTV/88888888/224/3221226005/index.m3u8",
     "sort": 2,
     "id": 0
   }

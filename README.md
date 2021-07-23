@@ -17,3 +17,4 @@
 
 # m3u8 repositories
 * [https://github.com/iptv-org/iptv](https://github.com/iptv-org/iptv)
+* [https://www.haah.net/archives/5209.html](辉哥博客)

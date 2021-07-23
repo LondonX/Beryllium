@@ -8,10 +8,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.github.salomonbrys.kotson.fromJson
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -38,7 +36,7 @@ import java.util.concurrent.TimeUnit
 
 private const val SERVER_PORT = 8899
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AnalyticsListener {
     private val andServer by lazy {
         AndServer.webServer(this)
             .port(SERVER_PORT)
@@ -86,8 +84,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         playerView.player = player
+        player.addAnalyticsListener(this)
 
         andServer.startup()
+        //start server
         lifecycleScope.launchWhenCreated {
             while (!isDestroyed) {
                 if (!andServer.isRunning) {
@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                 delay(5000)
             }
         }
+        //inject initial data
         lifecycleScope.launchWhenCreated {
             if (BuildConfig.DEBUG) db.tvStationDao().clear()
             val savedStations = db.tvStationDao().getAll()
@@ -211,5 +212,13 @@ class MainActivity : AppCompatActivity() {
         player.setMediaSource(ms)
         player.prepare()
         player.playWhenReady = true
+    }
+
+    override fun onPlaybackStateChanged(eventTime: AnalyticsListener.EventTime, state: Int) {
+        super.onPlaybackStateChanged(eventTime, state)
+        viewLoading.visibility = when (state) {
+            Player.STATE_BUFFERING -> View.VISIBLE
+            else -> View.INVISIBLE
+        }
     }
 }
