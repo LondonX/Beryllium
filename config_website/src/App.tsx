@@ -18,7 +18,7 @@ export default class App extends Component {
   }
 
   render(): ReactNode {
-    const tvStations: TVStation[] | null = this.state.tvStations;
+    const tvStations = this.state.tvStations as TVStation[] | null;
     return (
       <div>
         <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
@@ -54,7 +54,7 @@ export default class App extends Component {
             {
               tvStations != null
                 ? <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <p>{tvStations!.length} station(s)</p>
+                  <p>{tvStations.length} station(s)</p>
                   <Button
                     style={{ width: 240 }}
                     variant="primary"
@@ -67,7 +67,7 @@ export default class App extends Component {
                       }
                     })}>
                     Add TV Station
-                      </Button>
+                  </Button>
                 </div>
                 : <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                   <Spinner hidden={tvStations != null} animation="grow" variant="primary" />
