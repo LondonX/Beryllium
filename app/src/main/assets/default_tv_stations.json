@@ -1,26 +1,9 @@
 [
   {
-    "title": "Suvarna News",
-    "m3u8": "https://vidcdn.vidgyor.com/suvarna-origin/liveabr/playlist.m3u8",
+    "title": "CGTN News",
+    "m3u8": "https://news.cgtn.com/resource/live/english/cgtn-news.m3u8",
     "sort": 0,
-    "id": 0
-  },
-  {
-    "title": "Public TV",
-    "m3u8": "https://livestream.knowtable.xyz:5443/show/streams/Publictv_adaptive.m3u8",
-    "sort": 1,
-    "id": 0
-  },
-  {
-    "title": "Times Now",
-    "m3u8": "https://d1irnksb81zh0b.cloudfront.net/master.m3u8",
-    "sort": 2,
-    "id": 0
-  },
-  {
-    "title": "NDTV",
-    "m3u8": "https://ndtv24x7elemarchana.akamaized.net/hls/live/2003678-b/ndtv24x7/masterb_480p@5.m3u8",
-    "sort": 2,
-    "id": 0
+    "id": 0,
+    "refer": "iptv-org.github.io",
   }
 ]
