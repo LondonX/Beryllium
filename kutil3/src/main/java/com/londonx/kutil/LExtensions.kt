@@ -34,12 +34,6 @@ import java.io.Serializable
 import java.security.MessageDigest
 
 
-/**
- * Created by London on 2017/5/26.
- * 拓展类
- */
-val gson: Gson by lazy { Gson() }
-
 fun log(string: String) {
     Log.i("KUtil", string)
 }
@@ -374,3 +368,9 @@ inline fun <reified T> JSONObject.getOrNull(k: String): T? {
         null
     }
 }
+
+/**
+ * Created by London on 2017/5/26.
+ * 拓展类
+ */
+val gson: Gson by lazy { Gson() }
